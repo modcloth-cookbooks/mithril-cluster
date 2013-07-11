@@ -1,6 +1,8 @@
 mithril-cluster Cookbook
 ========================
 
+[![Build Status](https://travis-ci.org/modcloth-cookbooks/mithril-cluster.png?branch=master)](https://travis-ci.org/modcloth-cookbooks/mithril-cluster)
+
 ```bash
 # TODO: Enter the cookbook description here.
 ```
