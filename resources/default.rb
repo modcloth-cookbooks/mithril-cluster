@@ -1,4 +1,4 @@
-acitons :create
+actions :create
 
 attribute :stingray_auth_password, kind_of: String, default: nil
 attribute :stingray_auth_username, kind_of: String, default: nil
