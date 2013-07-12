@@ -11,6 +11,7 @@ action  :create do
   starting_port = node['mithril_service']['starting_port']
   cluster_size = node['mithril_service']['cluster']['cluster_size']
   deploy_action = node['mithril_service']['deploy_action'].to_sym
+  pg_master = node['mithril_service']['pg_master']
 
   # OK to do this at the compile phase of Chef
   no_deploy_file = '/tmp/.stingray-refusal-file'
