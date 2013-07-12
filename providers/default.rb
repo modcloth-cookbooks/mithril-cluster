@@ -94,6 +94,17 @@ action  :create do
     end
   end
 
+  remote_file "#{node['install_prefix']}/bin/aws" do
+    source 'https://raw.github.com/timkay/aws/master/aws'
+    mode 0755
+  end
+
+  cookbook_file "#{node['install_prefix']}/bin/s3-download-tarball" do
+    source 's3-download-tarball'
+    cookbook 'mithril-cluster'
+    mode 0755
+  end
+
   tarball_download_command = new_resource.tarball_download_command ||
     "s3-download-tarball 'mithril' " <<
     "'#{node['mithril_service']['revision']}' '#{release_dest}' --go"
