@@ -15,7 +15,7 @@ action  :create do
 
   # OK to do this at the compile phase of Chef
   no_deploy_file = '/tmp/.stingray-refusal-file'
-  File.delete(no_deploy_file) if ::File.exists?(no_deploy_file)
+  ::File.delete(no_deploy_file) if ::File.exists?(no_deploy_file)
 
   # check here since they are explicit dependencies so we don't end up in a bad state
   raise 'RabbitMQ master not provided' unless rabbitmq_master && !rabbitmq_master.empty?
@@ -89,7 +89,7 @@ action  :create do
       action :stop
 
       only_if do
-        !File.exists?(no_deploy_file) &&
+        !::File.exists?(no_deploy_file) &&
           [:deploy, :force_deploy].include?(deploy_action)
       end
     end
@@ -118,7 +118,7 @@ action  :create do
     code tarball_download_command
 
     only_if do
-      !File.exists?(no_deploy_file) &&
+      !::File.exists?(no_deploy_file) &&
         [:deploy, :force_deploy].include?(deploy_action)
     end
   end
@@ -129,7 +129,7 @@ action  :create do
     group 'mithril'
 
     only_if do
-      !File.exists?(no_deploy_file) &&
+      !::File.exists?(no_deploy_file) &&
         [:deploy, :force_deploy].include?(deploy_action)
     end
   end
@@ -147,7 +147,7 @@ action  :create do
       action :restart
 
       only_if do
-        !File.exists?(no_deploy_file) &&
+        !::File.exists?(no_deploy_file) &&
           [:deploy, :force_deploy].include?(deploy_action)
       end
       notifies :undrain, 'modcloth-stingray-exec[stingray-manager]', :immediately if new_resource.stingray_integration_enabled
