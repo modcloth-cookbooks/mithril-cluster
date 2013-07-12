@@ -99,8 +99,10 @@ action  :create do
     user 'mithril'
     group 'mithril'
 
+    ### FIX THIS !!!
     code %Q{s3-download-tarball 'mithril' } <<
     %Q{'#{node['mithril_service']['revision']}' '#{release_dest}' --go}
+    ###
 
     only_if do
       !File.exists?(no_deploy_file) &&
@@ -140,4 +142,6 @@ action  :create do
   end
 
   ### END DEPLOYMENT SECTION ###
+
+  new_resource.updated_by_last_action(true)
 end
