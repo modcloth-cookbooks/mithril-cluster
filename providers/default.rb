@@ -94,15 +94,16 @@ action  :create do
     end
   end
 
+  tarball_download_command = new_resource.tarball_download_command ||
+    "s3-download-tarball 'mithril' " <<
+    "'#{node['mithril_service']['revision']}' '#{release_dest}' --go"
+
   bash 'download mithril binary' do
     path ["#{home_prefix}/bin"]
     user 'mithril'
     group 'mithril'
 
-    ### FIX THIS !!!
-    code %Q{s3-download-tarball 'mithril' } <<
-    %Q{'#{node['mithril_service']['revision']}' '#{release_dest}' --go}
-    ###
+    code tarball_download_command
 
     only_if do
       !File.exists?(no_deploy_file) &&
