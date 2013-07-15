@@ -1,4 +1,4 @@
-action  :create do
+action :create do
   run_context.include_recipe 'golang'
 
   home_prefix = `echo ~mithril`.chomp
@@ -104,6 +104,21 @@ action  :create do
     source 's3-download-tarball'
     cookbook 'mithril-cluster'
     mode 0755
+  end
+
+  file "#{home_prefix}/.awssecret" do
+    owner 'mithril'
+    group 'mithril'
+    mode 0600
+
+    # AWS Access Key ID and Secret Access Key for
+    # public-artifacts-download-user, which has list and get-object permissions
+    # on the public ModCloth bucket that contains the public Mithril binaries.
+    # In case you don't want to host it yourself. :-)
+    content <<-EOF.gsub(/^\s+/, '')
+      AKIAJKTW32P2LV6AE2LA
+      +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
+    EOF
   end
 
   tarball_download_command = new_resource.tarball_download_command ||
