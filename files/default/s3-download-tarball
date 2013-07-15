@@ -67,7 +67,7 @@ function main() {
 
   local s3_bucket="${S3_BUCKE:-"modcloth-public-travis-artifacts"}"
 
-    local osname="${OSNAME:-"$(uname | tr '[:upper:]' '[:lower:]')"}"
+  local osname="${OSNAME:-"$(uname | tr '[:upper:]' '[:lower:]')"}"
   local archname="${ARCHNAME:-"$(uname -m)"}"
   local app="$1"
   local rev="$2"
