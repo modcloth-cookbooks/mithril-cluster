@@ -30,7 +30,11 @@ provide**.  They are:
   assumes that you have a user on the machine named `mithril` that will
 be responsible for executing the downloaded binaries.  If you don not
 have such a user, the cookbook will explode at the beginning of the
-compile phase.
+compile phase.)
+* writing the `.pgpass` file into the mithril user's home directory -
+  used in `templates/default/mithril-service-conf.erb` and expects the
+[standard
+format](http://www.postgresql.org/docs/9.1/static/libpq-pgpass.html)
 * creation of your database and user on the `pg_master` database
 * an `nginx` configuration for your application (not required, but
   highly recommended for managing SSL and round-robining to the
