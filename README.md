@@ -5,7 +5,12 @@ mithril-cluster Cookbook
 
 This cookbook is intended to be plug-and-play for downloading a binary
 for the [mithril](https://github.com/modcloth-labs/mithril) application
-and getting it running on a Linux box.  This cookbook does not currently
+and getting it running on a Linux box.  If you want more information on
+why you would use mithril in the first place, see
+[this](http://rafecolton.github.io/other/2013-07-08-mithril-not-just-for-dwarves-anymore.html)
+article.
+
+This cookbook does not currently
 support SmartOS because, as of writing, Go doesn't compile on SmartOS.
 As soon as it does, SmartOS support will be added.  This cookbook also
 integrates with
