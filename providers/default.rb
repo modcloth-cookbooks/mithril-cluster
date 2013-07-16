@@ -1,6 +1,4 @@
 action :create do
-  run_context.include_recipe 'golang'
-
   home_prefix = `echo ~mithril`.chomp
   raise 'Mithril user not found' if home_prefix =~ /~/
 
@@ -95,30 +93,32 @@ action :create do
     end
   end
 
-  remote_file "#{node['install_prefix']}/bin/aws" do
-    source 'https://raw.github.com/timkay/aws/master/aws'
-    mode 0755
-  end
+  unless new_resource.ignore_default_download_support_files
+    remote_file "#{node['install_prefix']}/bin/aws" do
+      source 'https://raw.github.com/timkay/aws/master/aws'
+      mode 0755
+    end
 
-  cookbook_file "#{node['install_prefix']}/bin/s3-download-tarball" do
-    source 's3-download-tarball'
-    cookbook 'mithril-cluster'
-    mode 0755
-  end
+    cookbook_file "#{node['install_prefix']}/bin/s3-download-tarball" do
+      source 's3-download-tarball'
+      cookbook 'mithril-cluster'
+      mode 0755
+    end
 
-  file "#{home_prefix}/.awssecret" do
-    owner 'mithril'
-    group 'mithril'
-    mode 0600
+    file "#{home_prefix}/.awssecret" do
+      owner 'mithril'
+      group 'mithril'
+      mode 0600
 
-    # AWS Access Key ID and Secret Access Key for
-    # public-artifacts-download-user, which has list and get-object permissions
-    # on the public ModCloth bucket that contains the public Mithril binaries.
-    # In case you don't want to host it yourself. :-)
-    content <<-EOF.gsub(/^\s+/, '')
-      AKIAJKTW32P2LV6AE2LA
-      +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
-    EOF
+      # AWS Access Key ID and Secret Access Key for
+      # public-artifacts-download-user, which has list and get-object permissions
+      # on the public ModCloth bucket that contains the public Mithril binaries.
+      # In case you don't want to host it yourself. :-)
+      content <<-EOF.gsub(/^\s+/, '')
+        AKIAJKTW32P2LV6AE2LA
+        +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
+      EOF
+    end
   end
 
   tarball_download_command = new_resource.tarball_download_command ||
