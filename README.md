@@ -148,7 +148,7 @@ not be include via the provider.
 following location:**
 
 ```ruby
-#{home_prefix}/app/shared/tmp/#{node['mithril_service']['revision']}/mithril/mithril-server
+"#{home_prefix}/app/shared/tmp/#{node['mithril_service']['revision']}/mithril/mithril-server"
 # where home_prefix is the home directory of the mithril user
 ```
 **That is where `mithril-cluster` expects to find it for further
