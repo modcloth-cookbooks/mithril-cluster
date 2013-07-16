@@ -7,7 +7,6 @@ action :create do
   starting_port = node['mithril_service']['starting_port']
   cluster_size = node['mithril_service']['cluster']['cluster_size']
   deploy_action = node['mithril_service']['deploy_action'].to_sym
-  pg_master = node['mithril_service']['pg_master']
 
   # OK to do this at the compile phase of Chef
   no_deploy_file = '/tmp/.stingray-refusal-file'
@@ -15,7 +14,6 @@ action :create do
 
   # check here since they are explicit dependencies so we don't end up in a bad state
   raise 'RabbitMQ master not provided' unless rabbitmq_master && !rabbitmq_master.empty?
-  raise 'PostgreSQL handler enabled but no URI provided' if node['mithril_service']['pg_enabled'] && !pg_master
 
   # These are *supposed* to be created by the deploy resource,
   # but apparently not always...
