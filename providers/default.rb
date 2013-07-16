@@ -1,9 +1,5 @@
 action :create do
-  run_context.include_recipe 'golang'
-
-  home_prefix = `echo ~mithril`.chomp
-  raise 'Mithril user not found' if home_prefix =~ /~/
-
+  home_prefix = node['mithril_service']['home_dir']
   app_shared = "#{home_prefix}/app/shared"
   gopath = "#{app_shared}/gopath"
   rabbitmq_master = node['mithril_service']['rabbitmq_master']
@@ -11,7 +7,6 @@ action :create do
   starting_port = node['mithril_service']['starting_port']
   cluster_size = node['mithril_service']['cluster']['cluster_size']
   deploy_action = node['mithril_service']['deploy_action'].to_sym
-  pg_master = node['mithril_service']['pg_master']
 
   # OK to do this at the compile phase of Chef
   no_deploy_file = '/tmp/.stingray-refusal-file'
@@ -19,7 +14,6 @@ action :create do
 
   # check here since they are explicit dependencies so we don't end up in a bad state
   raise 'RabbitMQ master not provided' unless rabbitmq_master && !rabbitmq_master.empty?
-  raise 'PostgreSQL handler enabled but no URI provided' if node['mithril_service']['pg_enabled'] && !pg_master
 
   # These are *supposed* to be created by the deploy resource,
   # but apparently not always...
@@ -51,11 +45,12 @@ action :create do
       source 'mithril-service.conf.erb'
       mode 0644
       variables(
+        :mithril_home => home_prefix,
         :server_address => ":#{starting_port + index}",
         :amqp_uri => rabbitmq_master,
-          :debug_enabled => node['mithril_service']['debug_enabled'],
-          :pg_enabled => node['mithril_service']['pg_enabled'],
-          :pid_file => node['mithril_service']['pid_file'] || ''
+        :debug_enabled => node['mithril_service']['debug_enabled'],
+        :pg_enabled => node['mithril_service']['pg_enabled'],
+        :pid_file => node['mithril_service']['pid_file'] || ''
       )
     end
   end
@@ -95,30 +90,32 @@ action :create do
     end
   end
 
-  remote_file "#{node['install_prefix']}/bin/aws" do
-    source 'https://raw.github.com/timkay/aws/master/aws'
-    mode 0755
-  end
+  unless new_resource.ignore_default_download_support_files
+    remote_file "#{node['install_prefix']}/bin/aws" do
+      source 'https://raw.github.com/timkay/aws/master/aws'
+      mode 0755
+    end
 
-  cookbook_file "#{node['install_prefix']}/bin/s3-download-tarball" do
-    source 's3-download-tarball'
-    cookbook 'mithril-cluster'
-    mode 0755
-  end
+    cookbook_file "#{node['install_prefix']}/bin/s3-download-tarball" do
+      source 's3-download-tarball'
+      cookbook 'mithril-cluster'
+      mode 0755
+    end
 
-  file "#{home_prefix}/.awssecret" do
-    owner 'mithril'
-    group 'mithril'
-    mode 0600
+    file "#{home_prefix}/.awssecret" do
+      owner 'mithril'
+      group 'mithril'
+      mode 0600
 
-    # AWS Access Key ID and Secret Access Key for
-    # public-artifacts-download-user, which has list and get-object permissions
-    # on the public ModCloth bucket that contains the public Mithril binaries.
-    # In case you don't want to host it yourself. :-)
-    content <<-EOF.gsub(/^\s+/, '')
-      AKIAJKTW32P2LV6AE2LA
-      +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
-    EOF
+      # AWS Access Key ID and Secret Access Key for
+      # public-artifacts-download-user, which has list and get-object permissions
+      # on the public ModCloth bucket that contains the public Mithril binaries.
+      # In case you don't want to host it yourself. :-)
+      content <<-EOF.gsub(/^\s+/, '')
+        AKIAJKTW32P2LV6AE2LA
+        +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
+      EOF
+    end
   end
 
   tarball_download_command = new_resource.tarball_download_command ||
