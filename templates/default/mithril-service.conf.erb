@@ -9,13 +9,13 @@ umask 022
 
 respawn
 respawn limit 3 10
-chdir /home/mithril
+chdir <%= @mithril_home %>
 script
-  /home/mithril/bin/mithril-server -a='<%= @server_address %>' \
+  <%= @mithril_home %>/bin/mithril-server -a='<%= @server_address %>' \
     -amqp.uri='<%= @amqp_uri %>' \
     <% if @pg_enabled -%>
     -pg \
-    -pg.uri=$(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' /home/mithril/.pgpass 2>/dev/null || echo '') \
+    -pg.uri=$(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' <%= @mithril_home %>/.pgpass 2>/dev/null || echo '') \
     <% end -%>
     <% if @debug_enabled -%>
     -d \
