@@ -1,7 +1,5 @@
 action :create do
-  home_prefix = `echo ~mithril`.chomp
-  raise 'Mithril user not found' if home_prefix =~ /~/
-
+  home_prefix = node['mithril_service']['home_dir']
   app_shared = "#{home_prefix}/app/shared"
   gopath = "#{app_shared}/gopath"
   rabbitmq_master = node['mithril_service']['rabbitmq_master']
@@ -51,9 +49,9 @@ action :create do
       variables(
         :server_address => ":#{starting_port + index}",
         :amqp_uri => rabbitmq_master,
-          :debug_enabled => node['mithril_service']['debug_enabled'],
-          :pg_enabled => node['mithril_service']['pg_enabled'],
-          :pid_file => node['mithril_service']['pid_file'] || ''
+        :debug_enabled => node['mithril_service']['debug_enabled'],
+        :pg_enabled => node['mithril_service']['pg_enabled'],
+        :pid_file => node['mithril_service']['pid_file'] || ''
       )
     end
   end

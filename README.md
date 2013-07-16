@@ -108,6 +108,12 @@ Attributes
     <td><tt>8371</tt></td>
   </tr>
   <tr>
+    <td><tt>['mithril_service']['home_dir']</tt></td>
+    <td>String</td>
+    <td>home directory for mithril user</td>
+    <td><tt>'/home/mithril'</tt></td>
+  </tr>
+  <tr>
     <td><tt>['install_prefix']</tt></td>
     <td>String</td>
     <td>prefix for installing executables/binaries</td>
