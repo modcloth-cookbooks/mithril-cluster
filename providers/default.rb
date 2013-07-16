@@ -47,6 +47,7 @@ action :create do
       source 'mithril-service.conf.erb'
       mode 0644
       variables(
+        :mithril_home => home_prefix,
         :server_address => ":#{starting_port + index}",
         :amqp_uri => rabbitmq_master,
         :debug_enabled => node['mithril_service']['debug_enabled'],
