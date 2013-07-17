@@ -99,7 +99,7 @@ Attributes
     <td><tt>['mithril_service']['cluster_size']</tt></td>
     <td>Integer</td>
     <td>number of application instances per machine</td>
-    <td><tt>2</tt></td>
+    <td><tt>1</tt></td>
   </tr>
   <tr>
     <td><tt>['mithril_service']['starting_port']</tt></td>
