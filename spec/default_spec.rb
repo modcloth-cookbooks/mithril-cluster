@@ -6,6 +6,7 @@ describe 'mithril-cluster::default' do
     ) do |node|
       node.normal['mithril_service']['rabbitmq_master'] = 'stub'
       node.normal['mithril_service']['pg_enabled'] = true
+      node.normal['mithril_service']['cluster']['cluster_size'] = 2
     end.converge described_recipe
   end
 
@@ -44,11 +45,9 @@ describe 'mithril-cluster::default' do
   end
 
   it 'creates upstart configuration files' do
-    now = Time.now
-    Time.stub(:now).and_return(now)
     %w(00 01).each do |num|
       chef_run.should create_file_with_content "/etc/init/mithril-service-#{num}.conf", <<-EOF.gsub(/^ {6}/, '').chomp
-      # Dropped off by Chef recipe[mithril::cluster] #{now}
+      # Dropped off by Chef recipe[mithril::cluster]
       description "Mithril Service"
 
       start on filesystem or runlevel [2345]
