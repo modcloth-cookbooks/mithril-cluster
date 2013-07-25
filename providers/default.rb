@@ -122,11 +122,16 @@ action :create do
     "s3-download-tarball 'mithril' " <<
     "'#{node['mithril_service']['revision']}' '#{release_dest}' --go"
 
+  kernel_machine = node['kernel']['machine']
+
   bash 'download mithril binary' do
     path ["#{home_prefix}/bin"]
     user 'mithril'
     group 'mithril'
-
+    environment(
+      'GOOS' => node['os'].downcase,
+      'GOARCH' => kernel_machine == 'x86_64' ? 'amd64' : kernel_machine,
+    )
     code tarball_download_command
 
     only_if do
