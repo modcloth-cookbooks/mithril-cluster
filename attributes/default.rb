@@ -1,4 +1,4 @@
-default['mithril_service']['revision'] = 'latest'
+default['mithril_service']['revision'] = 'master'
 default['mithril_service']['deploy_action'] = 'deploy'
 default['mithril_service']['pg_enabled'] = false
 default['mithril_service']['debug_enabled'] = true
