@@ -86,11 +86,6 @@ function main() {
   mkdir -p "$dest_dir"
   pushd "$dest_dir" >/dev/null
 
-  if [[ "$rev" == 'master' ]] ; then
-    log "Using 'latest' instead of 'master'"
-    rev='latest'
-  fi
-
   if [[ "$rev" == 'latest' ]] ; then
     log "Looking for the latest revision of '$app'"
     rev_re='[a-z0-9]+'
