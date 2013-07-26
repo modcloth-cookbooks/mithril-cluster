@@ -73,10 +73,6 @@ function main() {
   local rev="$2"
   local dest_dir="$3"
   if [[ "$4" == '--go' ]] ; then
-    # in case go was just installed and is not in $PATH yet
-    if ! which go >/dev/null ; then
-      source /etc/profile
-    fi
     osname="${GOOS:-"$(go env GOOS)"}"
     archname="${GOARCH:-"$(go env GOARCH)"}"
   fi
