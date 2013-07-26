@@ -29,6 +29,7 @@ action :create do
   ).each do |dirname|
     directory "#{home_prefix}/#{dirname}" do
       owner 'mithril'
+      group 'mithril'
       mode 0755
       recursive true
     end
