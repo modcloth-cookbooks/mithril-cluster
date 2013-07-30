@@ -107,7 +107,7 @@ describe 'mithril-cluster::default' do
 
   it 'runs the tarball download command' do
     chef_run.should execute_bash_script('download mithril binary').with(
-      code: "s3-download-tarball 'mithril' 'latest' '/home/mithril/app/shared/tmp/latest' --go"
+      code: "s3-download-tarball 'mithril' 'master' '/home/mithril/app/shared/tmp/master' --go"
     )
   end
 
