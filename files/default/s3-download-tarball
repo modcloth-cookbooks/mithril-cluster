@@ -65,7 +65,7 @@ function main() {
     exit 4
   fi
 
-  local s3_bucket="${S3_BUCKE:-"modcloth-public-travis-artifacts"}"
+  local s3_bucket="${S3_BUCKET:-"modcloth-public-travis-artifacts"}"
 
   local osname="${OSNAME:-"$(uname | tr '[:upper:]' '[:lower:]')"}"
   local archname="${ARCHNAME:-"$(uname -m)"}"
