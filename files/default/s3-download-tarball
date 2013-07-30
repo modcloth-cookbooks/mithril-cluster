@@ -111,18 +111,16 @@ function main() {
   local md5file="$url_base/$app.$tarball_extension.md5sum"
 
   log "Fetching '$tarball'"
-
-  if [[ "$5" == '--decrypt' ]] ; then
-    aws cat "$tarball" | \
-      openssl aes-256-cbc -d -a -pass 'env:TRAVIS_BUDDY_KEY' > "$app.tar.bz2"
-  else
-    aws cat "$tarball" > "$app.tar.bz2"
-  fi
+  aws cat "$tarball" > "$app.$tarball_extension"
 
   log "Fetching '$md5file'"
-  aws cat "$md5file" > "$app.tar.bz2.md5sum"
+  aws cat "$md5file" > "$app.$tarball_extension.md5sum"
 
-  assert_md5 "$app.tar.bz2" "$(awk '{ print $NF }' "$app.tar.bz2.md5sum")"
+  assert_md5 "$app.$tarball_extension" "$(awk '{ print $NF }' "$app.$tarall_extension.md5sum")"
+
+  if [[ "$5" == '--decrypt' ]] ; then
+    cat "$app.$tarball_extension" | openssl aes-256-cbc -d -a -pass 'env:TRAVIS_BUDDY_KEY' > "$app.tar.bz2"
+  fi
 
   log "Extracting '$app.tar.bz2'"
   tar xjvf "$app.tar.bz2" >&2
