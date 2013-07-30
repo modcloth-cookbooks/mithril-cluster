@@ -108,7 +108,7 @@ function main() {
 
   local url_base="$s3_bucket/artifacts/binaries/$osname/$archname/$app/$rev"
   local tarball="$url_base/$app.$tarball_extension"
-  local md5file="$url_base/$app.tar.bz2.md5sum"
+  local md5file="$url_base/$app.$tarball_extension.md5sum"
 
   log "Fetching '$tarball'"
 
