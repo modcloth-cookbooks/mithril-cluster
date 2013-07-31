@@ -116,7 +116,7 @@ function main() {
   log "Fetching '$md5file'"
   aws cat "$md5file" > "$app.$tarball_extension.md5sum"
 
-  assert_md5 "$app.$tarball_extension" "$(awk '{ print $NF }' "$app.$tarall_extension.md5sum")"
+  assert_md5 "$app.$tarball_extension" "$(awk '{ print $NF }' "$app.$tarball_extension.md5sum")"
 
   if [[ "$5" == '--decrypt' ]] ; then
     cat "$app.$tarball_extension" | openssl aes-256-cbc -d -a -pass 'env:TRAVIS_BUDDY_KEY' > "$app.tar.bz2"
