@@ -1,3 +1,5 @@
+require 'fileutils'
+
 describe 'mithril-cluster::default' do
   let(:chef_run) do
     ChefSpec::ChefRunner.new(
@@ -7,6 +9,7 @@ describe 'mithril-cluster::default' do
       node.normal['mithril_service']['rabbitmq_master'] = 'stub'
       node.normal['mithril_service']['pg_enabled'] = true
       node.normal['mithril_service']['cluster']['cluster_size'] = 2
+      node.normal['mithril_service']['ignore_default_download_support_files'] = true
     end.converge described_recipe
   end
 
@@ -77,37 +80,9 @@ describe 'mithril-cluster::default' do
     end
   end
 
-  it 'grabs aws' do
-    chef_run.should create_remote_file('/usr/local/bin/aws').with(
-      source: 'https://raw.github.com/timkay/aws/master/aws',
-      mode: 0755
-    )
-  end
-
-  it 'installs s3-download-tarball' do
-    chef_run.should create_cookbook_file('/usr/local/bin/s3-download-tarball')
-  end
-
-  it 'installs s3-download-tarball from mithril-cluster' do
-    file = chef_run.cookbook_file('/usr/local/bin/s3-download-tarball')
-    file.cookbook.should == 'mithril-cluster'
-  end
-
-  it 'sets s3-download-tarball mode' do
-    file = chef_run.cookbook_file('/usr/local/bin/s3-download-tarball')
-    file.mode.should == 0755
-  end
-
-  it 'creates the .awssecret file' do
-    chef_run.should create_file_with_content '/home/mithril/.awssecret', <<-EOF.gsub(/^ {4}/, '').chomp
-    KIAJKTW32P2LV6AE2LA
-    +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
-    EOF
-  end
-
   it 'runs the tarball download command' do
     chef_run.should execute_bash_script('download mithril binary').with(
-      code: "s3-download-tarball 'mithril' 'master' '/home/mithril/app/shared/tmp/master' --go"
+      code: "tb download-artifact 'mithril' 'master' '/home/mithril/app/shared/tmp/master' --go"
     )
   end
 

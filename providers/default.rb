@@ -91,17 +91,8 @@ action :create do
     end
   end
 
-  unless new_resource.ignore_default_download_support_files
-    remote_file "#{node['install_prefix']}/bin/aws" do
-      source 'https://raw.github.com/timkay/aws/master/aws'
-      mode 0755
-    end
-
-    cookbook_file "#{node['install_prefix']}/bin/s3-download-tarball" do
-      source 's3-download-tarball'
-      cookbook 'mithril-cluster'
-      mode 0755
-    end
+  unless node['mithril_service']['ignore_default_download_support_files']
+    run_context.include_recipe 'travis-buddy::install'
 
     file "#{home_prefix}/.awssecret" do
       owner 'mithril'
@@ -120,7 +111,7 @@ action :create do
   end
 
   tarball_download_command = new_resource.tarball_download_command ||
-    "s3-download-tarball 'mithril' " <<
+    "tb download-artifact 'mithril' " <<
     "'#{node['mithril_service']['revision']}' '#{release_dest}' --go"
 
   kernel_machine = node['kernel']['machine']
