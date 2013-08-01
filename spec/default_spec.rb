@@ -1,4 +1,15 @@
+require 'fileutils'
+
 describe 'mithril-cluster::default' do
+  before :all do
+    berksfile = Berkshelf::Berksfile.from_file('Berksfile')
+    berksfile.install(path: 'spec/cookbooks')
+  end
+
+  after :all do
+    FileUtils.rm_rf('spec/cookbooks')
+  end
+
   let(:chef_run) do
     ChefSpec::ChefRunner.new(
       step_into: ['mithril-cluster'],
@@ -77,25 +88,8 @@ describe 'mithril-cluster::default' do
     end
   end
 
-  it 'grabs aws' do
-    chef_run.should create_remote_file('/usr/local/bin/aws').with(
-      source: 'https://raw.github.com/timkay/aws/master/aws',
-      mode: 0755
-    )
-  end
-
-  it 'installs s3-download-tarball' do
-    chef_run.should create_cookbook_file('/usr/local/bin/s3-download-tarball')
-  end
-
-  it 'installs s3-download-tarball from mithril-cluster' do
-    file = chef_run.cookbook_file('/usr/local/bin/s3-download-tarball')
-    file.cookbook.should == 'mithril-cluster'
-  end
-
-  it 'sets s3-download-tarball mode' do
-    file = chef_run.cookbook_file('/usr/local/bin/s3-download-tarball')
-    file.mode.should == 0755
+  it 'uses the travis-buddy cookbook install recipe' do
+    chef_run.should include_recipe 'travis-buddy::install'
   end
 
   it 'creates the .awssecret file' do
@@ -107,7 +101,7 @@ describe 'mithril-cluster::default' do
 
   it 'runs the tarball download command' do
     chef_run.should execute_bash_script('download mithril binary').with(
-      code: "s3-download-tarball 'mithril' 'master' '/home/mithril/app/shared/tmp/master' --go"
+      code: "tb download-artifact 'mithril' 'master' '/home/mithril/app/shared/tmp/master' --go"
     )
   end
 

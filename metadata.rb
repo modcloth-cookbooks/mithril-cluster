@@ -8,5 +8,7 @@ version          '0.1.0'
 
 supports 'ubuntu'
 
-suggests 'modcloth-stingray-exec'
+depends 'travis-buddy'
+
 suggests 'golang'
+suggests 'modcloth-stingray-exec'
