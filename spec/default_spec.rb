@@ -2,8 +2,10 @@ require 'fileutils'
 
 describe 'mithril-cluster::default' do
   before :all do
-    berksfile = Berkshelf::Berksfile.from_file('Berksfile')
-    berksfile.install(path: 'spec/cookbooks')
+    silence_stream($stdout) do
+      berksfile = Berkshelf::Berksfile.from_file('Berksfile')
+      berksfile.install(path: 'spec/cookbooks')
+    end
   end
 
   after :all do
