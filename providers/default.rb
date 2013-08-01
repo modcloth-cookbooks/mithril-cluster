@@ -91,7 +91,7 @@ action :create do
     end
   end
 
-  unless new_resource.ignore_default_download_support_files
+  unless node['mithril_service']['ignore_default_download_support_files']
     run_context.include_recipe 'travis-buddy::install'
 
     file "#{home_prefix}/.awssecret" do

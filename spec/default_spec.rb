@@ -1,17 +1,6 @@
 require 'fileutils'
 
 describe 'mithril-cluster::default' do
-  before :all do
-    silence_stream($stdout) do
-      berksfile = Berkshelf::Berksfile.from_file('Berksfile')
-      berksfile.install(path: 'spec/cookbooks')
-    end
-  end
-
-  after :all do
-    FileUtils.rm_rf('spec/cookbooks')
-  end
-
   let(:chef_run) do
     ChefSpec::ChefRunner.new(
       step_into: ['mithril-cluster'],
@@ -20,6 +9,7 @@ describe 'mithril-cluster::default' do
       node.normal['mithril_service']['rabbitmq_master'] = 'stub'
       node.normal['mithril_service']['pg_enabled'] = true
       node.normal['mithril_service']['cluster']['cluster_size'] = 2
+      node.normal['mithril_service']['ignore_default_download_support_files'] = true
     end.converge described_recipe
   end
 
@@ -88,17 +78,6 @@ describe 'mithril-cluster::default' do
     %w(00 01).each do |num|
       chef_run.should stop_service "mithril-service-#{num}"
     end
-  end
-
-  it 'uses the travis-buddy cookbook install recipe' do
-    chef_run.should include_recipe 'travis-buddy::install'
-  end
-
-  it 'creates the .awssecret file' do
-    chef_run.should create_file_with_content '/home/mithril/.awssecret', <<-EOF.gsub(/^ {4}/, '').chomp
-    KIAJKTW32P2LV6AE2LA
-    +ExNRzWf+JhM7ZHLjfHzwPOjgnW+txfGcvnsCcs0
-    EOF
   end
 
   it 'runs the tarball download command' do
