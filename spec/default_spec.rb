@@ -1,5 +1,3 @@
-require 'fileutils'
-
 describe 'mithril-cluster::default' do
   let(:chef_run) do
     ChefSpec::ChefRunner.new(
