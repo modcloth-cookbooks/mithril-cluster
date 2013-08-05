@@ -123,6 +123,7 @@ action :create do
     environment(
       'GOOS' => node['os'].downcase,
       'GOARCH' => kernel_machine == 'x86_64' ? 'amd64' : kernel_machine,
+      'ARTIFACTS_S3_BUCKET' => 'modcloth-public-travis-artifacts'
     )
     code tarball_download_command
 
