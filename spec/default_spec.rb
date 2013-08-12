@@ -61,12 +61,13 @@ describe 'mithril-cluster::default' do
       respawn limit 3 10
       chdir /home/mithril
       script
-        /home/mithril/bin/mithril-server -a=':#{8371 + num.to_i}' \\
-          -amqp.uri='stub' \\
-          -pg \\
-          -pg.uri=$(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' /home/mithril/.pgpass 2>/dev/null || echo '') \\
+        /home/mithril/bin/mithril-server \\
+          -s postgresql \\
+          -u $(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' /home/mithril/.pgpass 2>/dev/null || echo '') \\
           -d \\
-          -p=''
+          -p '' \\
+          ':#{8371 + num.to_i}' \\
+          'stub'
       end script
       EOF
     end

@@ -44,6 +44,7 @@ action :create do
   cluster_size.times do |index|
     template "/etc/init/mithril-service-#{format('%02d', index)}.conf" do
       source 'mithril-service.conf.erb'
+      cookbook node['mithril_service']['service_config_cookbook']
       mode 0644
       variables(
         :mithril_home => home_prefix,
