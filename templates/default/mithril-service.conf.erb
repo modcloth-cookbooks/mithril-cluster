@@ -11,14 +11,15 @@ respawn
 respawn limit 3 10
 chdir <%= @mithril_home %>
 script
-  <%= @mithril_home %>/bin/mithril-server -a='<%= @server_address %>' \
-    -amqp.uri='<%= @amqp_uri %>' \
+  <%= @mithril_home %>/bin/mithril-server \
     <% if @pg_enabled -%>
-    -pg \
-    -pg.uri=$(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' <%= @mithril_home %>/.pgpass 2>/dev/null || echo '') \
+    -s postgresql
+    -u $(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' <%= @mithril_home %>/.pgpass 2>/dev/null || echo '') \
     <% end -%>
     <% if @debug_enabled -%>
     -d \
     <% end -%>
-    -p='<%= @pid_file %>'
+    -p='<%= @pid_file %>' \
+    '<%= @server_address %>' \
+    '<%= @amqp_uri %>'
 end script
