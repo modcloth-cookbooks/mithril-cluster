@@ -13,7 +13,7 @@ chdir <%= @mithril_home %>
 script
   <%= @mithril_home %>/bin/mithril-server \
     <% if @pg_enabled -%>
-    -s postgresql
+    -s postgresql \
     -u $(awk -F: '{ print "postgres://" $4 ":" $5 "@" $1 "/" $3 "?sslmode=disable"}' <%= @mithril_home %>/.pgpass 2>/dev/null || echo '') \
     <% end -%>
     <% if @debug_enabled -%>
