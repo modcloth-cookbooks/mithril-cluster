@@ -19,7 +19,7 @@ script
     <% if @debug_enabled -%>
     -d \
     <% end -%>
-    -p='<%= @pid_file %>' \
+    -p '<%= @pid_file %>' \
     '<%= @server_address %>' \
     '<%= @amqp_uri %>'
 end script
